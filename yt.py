@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 from googleapiclient.discovery import build
-import csv
 
 load_dotenv()
 
@@ -17,7 +16,7 @@ request = youtube.videos().list(
 
 response = request.execute()
 
-# Create variables for storage of videos and videolinks
+# print(response)
 videoStore = []
 youtubeURL = "https://www.youtube.com/watch?v="
 videoURL = ""
@@ -28,43 +27,7 @@ for item in response['items']:
     videoStore.append({'channelTitle': item['snippet']['channelTitle'], 
     'videoTitle': item['snippet']['title'], 'viewCount': item['statistics']['viewCount'],
     'URL': videoURL})
-    # print(videoStore[count])
     count += 1
-
-# Check if file has been written to
-fileSize = os.path.getsize("saved.csv")
-
-# Write to file and add the headers
-if fileSize == 0:
-    with open('saved.csv', mode='w', encoding="utf-8") as csv_file:
-        fieldnames = ['channelTitle', 'videoTitle', 'viewCount', 'URL']
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        writer.writeheader()
-
-        # Add each saved video to the csv file.
-        count = 0
-        for item in videoStore:
-            writer.writerow(videoStore[count])
-            count += 1
-
-# Append to file 
-else:
-    with open('saved.csv', mode='a', encoding="utf-8") as csv_file:
-        fieldnames = ['channelTitle', 'videoTitle', 'viewCount', 'URL']
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        # Add each saved video to the csv file.
-        count = 0
-        for item in videoStore:
-            writer.writerow(videoStore[count])
-            count += 1
-
-
-
-
-
-
-
-
 
 
 
